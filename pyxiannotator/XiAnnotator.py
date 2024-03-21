@@ -163,7 +163,7 @@ class XiAnnotatorSuper:
 
 
 class XiAnnotatorLocal(XiAnnotatorSuper):
-    def __init__(self, java_home_dir='/usr/lib/jvm/java-8-openjdk-amd64/', jar_path=''):
+    def __init__(self, java_home_dir='/usr/lib/jvm/java-8-openjdk-amd64/', jar_path='', jvmargs=''):
         XiAnnotatorSuper.__init__(self)
 
         self.xiAnnotatorVersion = '1.4.28'
@@ -193,7 +193,8 @@ class XiAnnotatorLocal(XiAnnotatorSuper):
             os.environ['CLASSPATH'] = jar_path
 
         import jpype
-        jpype.startJVM(classpath=jar_path)
+        if not jpype.isJVMStarted():
+            jpype.startJVM(jvmargs, classpath=jar_path)
         self.JString = jpype.java.lang.String
         self.annotator = jpype.JPackage('org').rappsilber.xiAnnotator()
 
